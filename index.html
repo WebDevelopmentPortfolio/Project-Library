@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project: Library</title>
+    <link rel="stylesheet" href="./styles.css">
+ 
+</head>
+<body>
+    <div class="page-container">
+        <div class="header-section">
+            <div class="empty-area"></div>
+            <div class="header">
+                <div class="logo-area">
+                    <div class="logo-image">
+                        <img alt="logo" src="./images/logo.png">
+                    </div>
+                    <h1>The Odin Project Public Library</h1>
+                </div>   
+                <div class="other-info">
+                    <div class="time-container">
+                        <svg class="time-icon" alt="time" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20C16.4 20 20 16.4 20 12S16.4 4 12 4 4 7.6 4 12 7.6 20 12 20M12 2C17.5 2 22 6.5 22 12S17.5 22 12 22C6.5 22 2 17.5 2 12C2 6.5 6.5 2 12 2M12.5 7V13H7V11.5H11V7H12.5Z" /></svg>
+                        <div class="time-text">9:30 AM - 9:00 PM</div>
+                    </div>
+                    <div class="button-section">
+                        <button id="addBtn">ADD A NEW BOOK</button>
+                        <dialog id="custom-modal" class="modal-box">
+                            <div class="modal-content">
+                                <div class="book-icon-container">
+                                    <img alt="book" src="./images/book-icon-155.png">
+                                </div>
+                                <form id="book-info">
+                                    <label for="book-title">TITLE
+                                        <input type="text" id="book-title" name="book_title" required>
+                                    </label>
+                                    <label for="book-author">AUTHOR
+                                        <input type="text" id="book-author" name="book_author" required>
+                                    </label>
+                                    <label for="book-genre">GENRE
+                                        <select id="book-genre" name="book_genre" required>
+                                            <option value="select" selected>Select</option>
+                                            <option value="fantasy">FANTASY</option>
+                                            <option value="science-fiction">SCIENCE FICTION</option>
+                                            <option value="mystery-and-crime">MYSTERY & CRIME</option>
+                                            <option value="thriller-and-suspense">THRILLER AND SUSPENSE</option>
+                                            <option value="romance">ROMANCE</option>
+                                            <option value="horror">HORROR</option>
+                                            <option value="self-help">SELF-HELP AND GUIDEBOOKS</option>
+                                        </select>
+                                    </label>
+                                    <label for="pages">NUMBER OF PAGES
+                                            <input type="number" id="pages" name="pages" required>
+                                    </label>
+                                    <fieldset>
+                                        <legend>TYPE OF BOOK</legend>
+                                        <ul>
+                                            <li>
+                                                <label for="paperback">PAPERBACK
+                                                    <input type="radio" id="paperback" name="booktype" value="paperback" required>
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="ebook">EBOOK
+                                                    <input type="radio" id="ebook" name="booktype" value="ebook">
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="audiobook">AUDIOBOOK
+                                                    <input type="radio" id="audiobook" name="booktype" value="audiobook">
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </fieldset>
+                                    <div class="modal-buttons-section">
+                                        <button type="submit" id="submit-button">ADD</button>
+                                        <button id="cancel-button" type="button">CANCEL</button>
+                                    </div>
+                                </form>                      
+                            </div>
+                        </dialog>
+                    </div>                   
+                </div>  
+            </div>
+        </div>
+        <main class="main-content">
+            <div class="navigation">
+                 <nav class="nav-links">
+                    <ul>
+                        <li><a href="#" data-page="home" class="nav-link active">HOME</a></li>
+                        <li><a href="#" data-page="browse" class="nav-link">BROWSE BOOKS</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="background-image-section">
+                <div class="background-image">
+                    <div class="attribution"></div>
+                </div>
+                
+                <div class="text-overlay">
+                    <div><img src="./images/book-icon-155.png"></div>
+                    <p>BOOKS AND E-BOOKS</p>
+                </div>
+            </div>
+            <div class="main-content-details">
+                <div class="books-cards-container"></div>
+            </div>
+            
+        </main>
+        <div class="footer"></div>
+    </div>
+    <script type="module" src="./script.js"></script>
+</body>
+</html>
