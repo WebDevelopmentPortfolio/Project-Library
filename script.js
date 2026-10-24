@@ -10,12 +10,9 @@ const pages = document.getElementById("pages");
 const types = document.querySelectorAll('input[name="booktype"]');
 const modalBtnAdd = document.getElementById("submit-button");
 const modalBtnCancel = document.getElementById("cancel-button");
-const browseBooks = document.getElementById("display-books");
-const homeLink = document.getElementById("home");
-const booksLink = document.getElementById("display-books");
 const navLinks = document.querySelectorAll(".nav-link");
 
-
+let currentPage = 'home';
 
 const pageBackground = {
     home: {
@@ -24,7 +21,9 @@ const pageBackground = {
         authorName: 'the blowup',
         authorURL: 'https://unsplash.com/@theblowup?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
         sourceName: 'Unsplash',
-        sourceURL: 'https://unsplash.com/photos/brown-wooden-door-near-gray-concrete-building-during-daytime-QWWfNjXer40?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText'
+        sourceURL: 'https://unsplash.com/photos/brown-wooden-door-near-gray-concrete-building-during-daytime-QWWfNjXer40?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
+        icon: "./images/home.png",
+        text: "WELCOME TO OUR LIBRARY"
     
     },
     browse: {
@@ -33,8 +32,10 @@ const pageBackground = {
         authorName: 'Priscilla Du Preez 🇨🇦',
         authorURL: 'https://unsplash.com/@priscilladupreez?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
         sourceName: 'Unsplash',
-        sourceURL: 'https://unsplash.com/photos/shallow-focus-photography-of-bookshelfs-ggeZ9oyI-PE?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText'
-    
+        sourceURL: 'https://unsplash.com/photos/shallow-focus-photography-of-bookshelfs-ggeZ9oyI-PE?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
+        icon: "./images/book-icon-155.png",
+        text: "BOOKS AND E-BOOKS"
+
     }
 
 };
@@ -42,6 +43,9 @@ const pageBackground = {
 
 const pageBackgroundImage = document.querySelector(".background-image");
 const attributionText = document.querySelector(".attribution");
+const pageIcon = document.querySelector(".page-icon");
+const pageText = document.querySelector(".text-overlay p");
+const textOverlay = document.querySelector(".text-overlay");
 
 
 function swapPageBackground(pageName) {
@@ -66,8 +70,16 @@ function swapPageBackground(pageName) {
     sourceLink.target = '_blank';
     sourceLink.rel = 'noopener';
 
+    const imageIcon = document.createElement('img');
+    imageIcon.src = pageBackgroundData.icon;
+    imageIcon.alt = ""
+
+    pageText.textContent = pageBackgroundData.text;
+
     /*replace previous elements and append new*/
     attributionText.replaceChildren(text1, authorLink, text2, sourceLink);
+    pageIcon.replaceChildren(imageIcon);
+    textOverlay.replaceChildren(pageIcon, pageText);
 
 }
 
@@ -77,6 +89,7 @@ function navLinkActive(pageName) {
     navLinks.forEach(link => {
         if (link.getAttribute('data-page') === pageName) {
             link.classList.add('active');
+
         }
         else {
             link.classList.remove('active');
@@ -85,17 +98,6 @@ function navLinkActive(pageName) {
     });
 }
 
-
-navLinks.forEach(link => {
-    link.addEventListener('click', (event) => {
-        event.preventDefault();
-        const pageName = event.currentTarget.getAttribute('data-page');
-        navLinkActive(pageName);
-        swapPageBackground(pageName);
-
-    });
-
-});
 
 
 let libraryOfBooks = [];
@@ -177,7 +179,7 @@ function addNewBook() {
     let selectedType = "";
     types.forEach((type) => {
         if(type.checked) {
-            selectedType = convertText(type.parentElement.textContent);
+            selectedType = type.parentElement.textContent;
         }
 
     });
@@ -185,6 +187,10 @@ function addNewBook() {
     const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType);
 
     libraryOfBooks.push(newBook);
+
+    if (currentPage === 'browse') {
+        displayBooks();
+    }
 
 }
 
@@ -288,7 +294,7 @@ function displayBooks() {
         const numberOfPages = document.createElement("h4");
         numberOfPages.textContent = `Number of pages: ${book.pages}`;
 
-        const typeOfBook = document.createElement("h4");
+        const typeOfBook = document.createElement("h5");
         typeOfBook.textContent = book.type;
 
         imgContainer.append(imgBook);
@@ -302,5 +308,27 @@ function displayBooks() {
 }
 
 
+navLinks.forEach(link => {
+    link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const pageName = event.currentTarget.getAttribute('data-page');
 
-swapPageBackground('home');
+        currentPage = pageName;
+
+        navLinkActive(pageName);
+        swapPageBackground(pageName);
+       
+        if (pageName === 'home') {
+            booksContainer.replaceChildren(); /*make the books container NOT visible*/
+        }
+        else if (pageName === 'browse') {
+            displayBooks();
+        }
+
+
+    });
+
+});
+
+
+swapPageBackground('home'); /*default page*/
