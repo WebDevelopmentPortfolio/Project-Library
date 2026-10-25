@@ -102,7 +102,9 @@ function navLinkActive(pageName) {
 
 let libraryOfBooks = [];
 
-function Book(id, cover, title, author, genre, pages, type, ) {
+let read = false;
+
+function Book(id, cover, title, author, genre, pages, type, read) {
     this.id = id;
     this.cover = cover;
     this.title = title;
@@ -110,6 +112,7 @@ function Book(id, cover, title, author, genre, pages, type, ) {
     this.genre = genre;
     this.pages = pages;
     this.type = type;
+    this.read = read;
 
 }
 
@@ -184,7 +187,9 @@ function addNewBook() {
 
     });
 
-    const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType);
+    read = false;
+
+    const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType, read);
 
     libraryOfBooks.push(newBook);
 
@@ -246,6 +251,64 @@ modalBtnCancel.addEventListener('click', () => {
 });
 
 
+function createBookOverlay(book) {
+    
+    const overlay = document.createElement("div");
+    overlay.classList.add(
+        "book-image-overlay", 
+        book.cover.position
+    );
+    overlay.style.fontFamily = book.cover.font;
+    overlay.style.color = book.cover.color;
+    overlay.style.textAlign = book.cover.alignment;
+    overlay.style.fontWeight = book.cover.weight;
+
+    const overlayTitle = document.createElement("h2");
+    overlayTitle.textContent = book.title;
+
+    const overlayAuthor = document.createElement("p");
+    overlayAuthor.textContent = book.author;
+
+    overlay.append(overlayTitle, overlayAuthor);
+
+    return overlay;
+
+
+}
+
+
+function createBookDetails(book) {
+    const bookDetails = document.createElement("div");
+    bookDetails.className = "book-details";
+        
+    const bookTitle = document.createElement("h3");
+    bookTitle.textContent = book.title;
+
+    const bookAuthor = document.createElement("h4");
+    bookAuthor.textContent = `by ${book.author}`;
+
+    const bookGenre = document.createElement("h4");
+    bookGenre.textContent = `Genre: ${book.genre}`;
+
+    const numberOfPages = document.createElement("h4");
+    numberOfPages.textContent = `Number of pages: ${book.pages}`;
+
+    const typeOfBookContainer = document.createElement("div");
+    typeOfBookContainer.className = "type-of-book-container";
+        
+    const typeOfBook = document.createElement("h5");
+    typeOfBook.textContent = book.type;
+
+    const bookIconType = createTypeIcon((book.type).trim().toLowerCase());
+
+    typeOfBookContainer.append(bookIconType, typeOfBook)
+    bookDetails.append(bookTitle, bookAuthor, bookGenre, numberOfPages, typeOfBookContainer);
+
+    return bookDetails;
+
+}
+
+
 const typeIcons = {
     paperback: './images/book-open-blank-variant-outline.png',
     ebook: './images/book-outline.png',
@@ -254,7 +317,7 @@ const typeIcons = {
 }
 
 
-function typeIcon(type) {
+function createTypeIcon(type) {
     const typeIconContainer = document.createElement("div");
     typeIconContainer.className = "type-icon-container";
 
@@ -265,6 +328,77 @@ function typeIcon(type) {
     typeIconContainer.replaceChildren(imgTypeContainer);
 
     return typeIconContainer;
+
+}
+
+
+Array.prototype.toggleReadStatus = function(bookId) {
+    const book = this.find(b => b.id === bookId);
+    if (book) {
+        book.read = !book.read;
+        return true;
+    }
+    return false;
+
+}
+
+
+function bookActionRead(book) {
+    const bookActionsContainer = document.createElement("div");
+    bookActionsContainer.className = "book-actions-container";
+    
+    const readIconButton = document.createElement("button");
+    /*readIconButton.className = "read-icon-button";*/
+        
+    const imgReadIcon = document.createElement("img");
+    imgReadIcon.src = "./images/student_18170261.png";
+    imgReadIcon.alt = "Read this book";
+
+    readIconButton.dataset.id = book.id;
+
+    const classReadStatus = book.read ? "btn-read" : "button-unread";
+    
+    readIconButton.classList.add("read-icon-button", classReadStatus);
+        
+
+    
+
+
+    const readButtonText = document.createTextNode('Read this book');
+
+    readIconButton.append(imgReadIcon, readButtonText);
+
+}
+
+
+function createBookActions() {
+    const bookActionsContainer = document.createElement("div");
+    bookActionsContainer.className = "book-actions-container";
+    
+    const readIconButton = document.createElement("button");
+    readIconButton.className = "read-icon-button";
+        
+    const imgReadIcon = document.createElement("img");
+    imgReadIcon.src = "./images/student_18170261.png";
+    imgReadIcon.alt = "Read this book";
+
+    const readButtonText = document.createTextNode('Read this book');
+
+    const removeBookButton = document.createElement("button");
+    removeBookButton.className = "remove-book-button";
+
+    const imgRemoveIcon = document.createElement("img");
+    imgRemoveIcon.src = "./images/delete_1632602.png";
+    imgRemoveIcon.alt = "Remove this book";
+
+
+
+    readIconButton.append(imgReadIcon, readButtonText);
+    removeBookButton.append(imgRemoveIcon);
+    bookActionsContainer.append(readIconButton, removeBookButton);
+
+    return bookActionsContainer;
+
 
 }
 
@@ -285,50 +419,14 @@ function displayBooks() {
         imgBook.src = book.cover.image;
         imgBook.alt = `Cover of ${book.title}`;
 
-        const overlay = document.createElement("div");
-        overlay.classList.add(
-            "book-image-overlay", 
-            book.cover.position
-        );
-        overlay.style.fontFamily = book.cover.font;
-        overlay.style.color = book.cover.color;
-        overlay.style.textAlign = book.cover.alignment;
-        overlay.style.fontWeight = book.cover.weight;
+        const overlay = createBookOverlay(book);
 
-        const overlayTitle = document.createElement("h2");
-        overlayTitle.textContent = book.title;
+        const bookDetails = createBookDetails(book);
 
-        const overlayAuthor = document.createElement("p");
-        overlayAuthor.textContent = book.author;
+        const bookActions = createBookActions();
 
-        const bookDetails = document.createElement("div");
-        bookDetails.className = "book-details";
-        
-        const bookTitle = document.createElement("h3");
-        bookTitle.textContent = book.title;
-
-        const bookAuthor = document.createElement("h4");
-        bookAuthor.textContent = `by ${book.author}`;
-
-        const bookGenre = document.createElement("h4");
-        bookGenre.textContent = `Genre: ${book.genre}`;
-
-        const numberOfPages = document.createElement("h4");
-        numberOfPages.textContent = `Number of pages: ${book.pages}`;
-
-        const typeOfBookContainer = document.createElement("div");
-        typeOfBookContainer.className = "type-of-book-container";
-        
-        const typeOfBook = document.createElement("h5");
-        typeOfBook.textContent = book.type;
-
-        const bookIconType = typeIcon((book.type).trim().toLowerCase());
-        
         imgContainer.append(imgBook);
-        overlay.append(overlayTitle, overlayAuthor);
-        typeOfBookContainer.append(bookIconType, typeOfBook)
-        bookDetails.append(bookTitle, bookAuthor, bookGenre, numberOfPages, typeOfBookContainer);
-        card.append(imgContainer, overlay, bookDetails);
+        card.append(imgContainer, overlay, bookDetails, bookActions);
         booksContainer.appendChild(card);
 
 

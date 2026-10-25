@@ -130,7 +130,9 @@ h1 {
 }
 
 
-button {
+button[id="addBtn"],
+button[id="submit-button"],
+button[id="cancel-button"] {
     width: 200px;
     height: 50px;
     font-size: 18px;
@@ -141,8 +143,9 @@ button {
 }
 
 
-button:hover,
-button:active {
+#addBtn:hover,
+#submit-button:hover,
+#cancel-button:hover {
     background-color: purple;
     cursor: pointer;
 }
@@ -465,7 +468,7 @@ li {
     display: flex;
     flex-direction: column;
     width: 260px;
-    height: 400px;
+    height: 430px;
     background: transparent;
     border-radius: 8px;
     box-shadow: rgb(233, 233, 233) 0px 0px 3px 3px;
@@ -568,6 +571,34 @@ h5 {
 
 .type-icon-container img {
     width: 20px;
-    mix-blend-mode: multiply;
     
 }
+
+
+.book-actions-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+
+
+}
+
+.read-icon-button,
+.remove-book-button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+}
+
+
+.read-icon-button img,
+.remove-book-button img {
+    width: 24px;
+
+}
+
