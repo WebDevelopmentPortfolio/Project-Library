@@ -72,7 +72,7 @@ function swapPageBackground(pageName) {
 
     const imageIcon = document.createElement('img');
     imageIcon.src = pageBackgroundData.icon;
-    imageIcon.alt = ""
+    imageIcon.alt = `${currentPage}`;
 
     pageText.textContent = pageBackgroundData.text;
 
@@ -246,6 +246,28 @@ modalBtnCancel.addEventListener('click', () => {
 });
 
 
+const typeIcons = {
+    paperback: './images/book-open-blank-variant-outline.png',
+    ebook: './images/book-outline.png',
+    audiobook: './images/headphone-svgrepo-com.png'
+
+}
+
+
+function typeIcon(type) {
+    const typeIconContainer = document.createElement("div");
+    typeIconContainer.className = "type-icon-container";
+
+    const imgTypeContainer = document.createElement("img");
+    imgTypeContainer.src = typeIcons[type];
+    imgTypeContainer.alt = `${typeIcons[type]}`;
+    
+    typeIconContainer.replaceChildren(imgTypeContainer);
+
+    return typeIconContainer;
+
+}
+
 
 function displayBooks() {
     
@@ -294,14 +316,21 @@ function displayBooks() {
         const numberOfPages = document.createElement("h4");
         numberOfPages.textContent = `Number of pages: ${book.pages}`;
 
+        const typeOfBookContainer = document.createElement("div");
+        typeOfBookContainer.className = "type-of-book-container";
+        
         const typeOfBook = document.createElement("h5");
         typeOfBook.textContent = book.type;
 
+        const bookIconType = typeIcon((book.type).trim().toLowerCase());
+        
         imgContainer.append(imgBook);
         overlay.append(overlayTitle, overlayAuthor);
-        bookDetails.append(bookTitle, bookAuthor, bookGenre, numberOfPages, typeOfBook);
+        typeOfBookContainer.append(bookIconType, typeOfBook)
+        bookDetails.append(bookTitle, bookAuthor, bookGenre, numberOfPages, typeOfBookContainer);
         card.append(imgContainer, overlay, bookDetails);
         booksContainer.appendChild(card);
+
 
     }); 
 
