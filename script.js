@@ -102,8 +102,6 @@ function navLinkActive(pageName) {
 
 let libraryOfBooks = [];
 
-let read = false;
-
 function Book(id, cover, title, author, genre, pages, type, read) {
     this.id = id;
     this.cover = cover;
@@ -158,25 +156,30 @@ function addNewBook() {
     const enteredTitle = convertText(title.value.toUpperCase());
     
     const authorName = author.value;
+    let nameArray = [];
     let enteredAuthor;
     if (authorName.includes(" ")) {
         const fullName = authorName.split(" ");
-        const firstName = fullName[0].toUpperCase();
-        const lastName = fullName[1].toUpperCase();
-        const convertedFirstName = convertText(firstName);
-        const convertedLastName = convertText(lastName);
-        enteredAuthor = convertedFirstName + " " + convertedLastName;
+        for (let eachName of fullName) {
+            const convertName = convertText(eachName.toUpperCase());
+            nameArray.push(convertName);
+        }
+        
+        enteredAuthor = nameArray.join(" ");
+
     }
     else {
         enteredAuthor = convertText(author.value.toUpperCase());
     }
 
+    
     let selectedGenre;
     const index = genre.selectedIndex;
-    if (genre.options[index].textContent !== "Select") {
+    /*if (genre.options[index].textContent !== "Select") {*/
+        /*selectedGenre = convertText(genre.options[index].textContent);*/
         selectedGenre = convertText(genre.options[index].textContent);
-    }
-
+    /*}*/
+    
     const enteredPages = pages.value;
 
     let selectedType = "";
@@ -187,7 +190,7 @@ function addNewBook() {
 
     });
 
-    read = false;
+    let read = false;
 
     const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType, read);
 
@@ -251,6 +254,31 @@ modalBtnCancel.addEventListener('click', () => {
 });
 
 
+function createImageBook(book) {
+    const imgContainer = document.createElement("div");
+    imgContainer.className = "book-image-container";
+        
+    const imgBook = document.createElement("img");
+    imgBook.src = book.cover.image;
+    imgBook.alt = `Cover of ${book.title}`;
+
+    imgContainer.append(imgBook);
+
+    /*create a "Reading" mark across the book for read books upon display of books*/
+    if (book.read) {
+        const readingOverlay = document.createElement("div");
+        readingOverlay.className = "reading-overlay";
+        readingOverlay.textContent = "Reading";
+
+        imgContainer.append(imgBook, readingOverlay);
+
+    }
+
+    return imgContainer;
+
+}
+
+
 function createBookOverlay(book) {
     
     const overlay = document.createElement("div");
@@ -277,7 +305,7 @@ function createBookOverlay(book) {
 }
 
 
-function createBookDetails(book) {
+function displayBookDetails(book) {
     const bookDetails = document.createElement("div");
     bookDetails.className = "book-details";
         
@@ -337,6 +365,7 @@ Array.prototype.toggleReadStatus = function(bookId) {
     if (book) {
         book.read = !book.read;
         return true;
+
     }
     return false;
 
@@ -344,46 +373,85 @@ Array.prototype.toggleReadStatus = function(bookId) {
 
 
 function bookActionRead(book) {
-    const bookActionsContainer = document.createElement("div");
-    bookActionsContainer.className = "book-actions-container";
     
-    const readIconButton = document.createElement("button");
-    /*readIconButton.className = "read-icon-button";*/
+    const readBookButton = document.createElement("button");
         
     const imgReadIcon = document.createElement("img");
     imgReadIcon.src = "./images/student_18170261.png";
     imgReadIcon.alt = "Read this book";
 
-    readIconButton.dataset.id = book.id;
-
-    const classReadStatus = book.read ? "btn-read" : "button-unread";
+    readBookButton.dataset.id = book.id;
+ 
+    const classReadStatus = book.read ? "btn-read" : "btn-unread";
     
-    readIconButton.classList.add("read-icon-button", classReadStatus);
+    readBookButton.classList.add("read-book-button", classReadStatus);
+    
+    const readButtonText = book.read ? document.createTextNode('Done reading') : document.createTextNode('Read this book');
+
+    readBookButton.append(imgReadIcon, readButtonText);
+    
+    readBookButton.addEventListener('click', (event) => {
+        const bookId = event.currentTarget.dataset.id;
+
+        const bookExists = libraryOfBooks.toggleReadStatus(bookId);
         
+        if (bookExists) {
+            const updatedBook = libraryOfBooks.find(b => b.id === bookId);
+            
+            readButtonText.textContent = updatedBook.read ? "Done reading" : "Read this book";
 
+            readBookButton.classList.toggle("btn-read", updatedBook.read);
+            readBookButton.classList.toggle("btn-unread", !updatedBook.read);
+
+            createReadingMark(readBookButton, updatedBook);
+            
+        }
+
+    })
     
-
-
-    const readButtonText = document.createTextNode('Read this book');
-
-    readIconButton.append(imgReadIcon, readButtonText);
+    return readBookButton;
 
 }
 
 
-function createBookActions() {
-    const bookActionsContainer = document.createElement("div");
-    bookActionsContainer.className = "book-actions-container";
-    
-    const readIconButton = document.createElement("button");
-    readIconButton.className = "read-icon-button";
-        
-    const imgReadIcon = document.createElement("img");
-    imgReadIcon.src = "./images/student_18170261.png";
-    imgReadIcon.alt = "Read this book";
+function createReadingMark(button, book) {
+    const bookCard = button.closest(".book-card"); /*traverse from the read button up to the common parent*/
+    let readingOverlay = bookCard.querySelector(".reading-overlay");
 
-    const readButtonText = document.createTextNode('Read this book');
+    /*create a "Reading" mark across the book when toggling read*/
+    if (book.read && !readingOverlay) {
+        readingOverlay = document.createElement("div");
+        readingOverlay.className = "reading-overlay";
+        readingOverlay.textContent = "Reading";
 
+        const overlayContainer = bookCard.querySelector(".book-image-container"); /*traverse down to the correct container to append*/
+        overlayContainer.append(readingOverlay); 
+
+    }
+    else if (!book.read && readingOverlay) {
+        readingOverlay.remove();
+    }
+
+
+}
+
+
+Array.prototype.removeBook = function(bookId) {
+
+    const index = this.findIndex(book => book.id === bookId )
+
+    if (index != -1) {
+        this.splice(index, 1);
+        return true;
+
+    }
+
+    return false;
+
+}
+
+
+function bookActionRemove(book) {
     const removeBookButton = document.createElement("button");
     removeBookButton.className = "remove-book-button";
 
@@ -391,11 +459,42 @@ function createBookActions() {
     imgRemoveIcon.src = "./images/delete_1632602.png";
     imgRemoveIcon.alt = "Remove this book";
 
+    removeBookButton.dataset.id = book.id;
 
-
-    readIconButton.append(imgReadIcon, readButtonText);
     removeBookButton.append(imgRemoveIcon);
-    bookActionsContainer.append(readIconButton, removeBookButton);
+
+    removeBookButton.addEventListener('click', (event) => {
+        const bookId = event.currentTarget.dataset.id;
+
+        const confirmRemove = confirm("Are you sure you want to delete this book?");
+
+        if (confirmRemove) {
+            const bookIsRemoved = libraryOfBooks.removeBook(bookId); /*book is removed from array*/
+
+            if (bookIsRemoved) {
+                removeBookButton.closest(".book-card").remove(); /*traverse from the button up to the parent (book card) to remove it*/
+            }
+
+        }
+
+
+    });
+
+    return removeBookButton;
+
+}
+
+
+
+function createBookActions(book) {
+    const bookActionsContainer = document.createElement("div");
+    bookActionsContainer.className = "book-actions-container";
+    
+    const readButton = bookActionRead(book);
+
+    const removeButton = bookActionRemove(book);
+
+    bookActionsContainer.append(readButton, removeButton);
 
     return bookActionsContainer;
 
@@ -412,24 +511,18 @@ function displayBooks() {
         const card = document.createElement("div");
         card.className = "book-card";
 
-        const imgContainer = document.createElement("div");
-        imgContainer.className = "book-image-container";
-        
-        const imgBook = document.createElement("img");
-        imgBook.src = book.cover.image;
-        imgBook.alt = `Cover of ${book.title}`;
+        const bookImage = createImageBook(book);
 
         const overlay = createBookOverlay(book);
 
-        const bookDetails = createBookDetails(book);
+        const bookDetails = displayBookDetails(book);
 
-        const bookActions = createBookActions();
+        const bookActions = createBookActions(book);
 
-        imgContainer.append(imgBook);
-        card.append(imgContainer, overlay, bookDetails, bookActions);
+        card.append(bookImage, overlay, bookDetails, bookActions);
         booksContainer.appendChild(card);
 
-
+        
     }); 
 
 }
