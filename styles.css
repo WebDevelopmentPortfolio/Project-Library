@@ -577,15 +577,18 @@ h4 {
 
 h4 {
     font-size: 14px;
+    overflow-wrap: break-word;
 }
 
 h5 {
     font-size: 12px;
+    overflow-wrap: break-word;
 }
 
 
 .book-image-overlay h2 {
     font-size: 40px;
+    overflow-wrap: break-word;
 
 }
 
