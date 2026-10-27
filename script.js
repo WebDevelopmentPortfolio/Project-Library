@@ -2,7 +2,7 @@
 const addBookBtn = document.getElementById("addBtn");
 const modalBox = document.getElementById("custom-modal");
 const booksContainer = document.querySelector(".books-cards-container");
-const formToSubmit = document.getElementById("book-info");
+const formToSubmit = document.getElementById("book-form");
 const title = document.getElementById("book-title");
 const author = document.getElementById("book-author");
 const genre = document.getElementById("book-genre");
@@ -11,6 +11,7 @@ const types = document.querySelectorAll('input[name="booktype"]');
 const modalBtnAdd = document.getElementById("submit-button");
 const modalBtnCancel = document.getElementById("cancel-button");
 const navLinks = document.querySelectorAll(".nav-link");
+const mainContent = document.querySelector(".main-content-details");
 
 let currentPage = 'home';
 
@@ -172,13 +173,9 @@ function addNewBook() {
         enteredAuthor = convertText(author.value.toUpperCase());
     }
 
-    
     let selectedGenre;
-    const index = genre.selectedIndex;
-    /*if (genre.options[index].textContent !== "Select") {*/
-        /*selectedGenre = convertText(genre.options[index].textContent);*/
-        selectedGenre = convertText(genre.options[index].textContent);
-    /*}*/
+    const index = genre.selectedIndex  
+    selectedGenre = convertText(genre.options[index].textContent);
     
     const enteredPages = pages.value;
 
@@ -475,6 +472,10 @@ function bookActionRemove(book) {
                 removeBookButton.closest(".book-card").remove(); /*traverse from the button up to the parent (book card) to remove it*/
             }
 
+            if (libraryOfBooks.length === 0) {
+                noBooksText();
+            }
+
         }
 
 
@@ -502,29 +503,41 @@ function createBookActions(book) {
 }
 
 
+function noBooksText() {
+    const textToDisplay = document.createElement("p");
+    textToDisplay.textContent = "NO BOOKS TO DISPLAY. PLEASE ADD A BOOK.";
+    booksContainer.append(textToDisplay);
+
+}
+
+
 function displayBooks() {
     
-    const booksContainer = document.querySelector(".books-cards-container");
-    booksContainer.replaceChildren();
+    if (libraryOfBooks.length === 0) {
+        noBooksText();
+    }
+    else {
+        booksContainer.replaceChildren();
 
-    libraryOfBooks.forEach(function(book) {
-        const card = document.createElement("div");
-        card.className = "book-card";
+        libraryOfBooks.forEach(function(book) {
+            const card = document.createElement("div");
+            card.className = "book-card";
 
-        const bookImage = createImageBook(book);
+            const bookImage = createImageBook(book);
 
-        const overlay = createBookOverlay(book);
+            const overlay = createBookOverlay(book);
 
-        const bookDetails = displayBookDetails(book);
+            const bookDetails = displayBookDetails(book);
 
-        const bookActions = createBookActions(book);
+            const bookActions = createBookActions(book);
 
-        card.append(bookImage, overlay, bookDetails, bookActions);
-        booksContainer.appendChild(card);
+            card.append(bookImage, overlay, bookDetails, bookActions);
+            booksContainer.appendChild(card);
+            
+        }); 
 
-        
-    }); 
-
+    }
+    
 }
 
 
@@ -540,6 +553,7 @@ navLinks.forEach(link => {
        
         if (pageName === 'home') {
             booksContainer.replaceChildren(); /*make the books container NOT visible*/
+        
         }
         else if (pageName === 'browse') {
             displayBooks();
