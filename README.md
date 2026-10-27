@@ -10,6 +10,7 @@ Features requirements:
 3. Display the array of books. Display in whatever form you want, like a table OR each their own "card." I choose "cards."
 4. A button to toggle read status of each book. Use an array prototype for this.
 5. A button to remove/delete each book. Maybe use an array prototype too.
+6. There is NO local storage to save the data, i.e. data disappear every page reload.
 
 I may have gotten carried away in designing the layout. 
 
@@ -19,7 +20,7 @@ I added pretend book cover images through random selections from https://picsum.
 
 As always, this is NOT fully responsive (yet) and does NOT look good in mobile.
 
-
+To see the page in action, go to https://webdevelopmentportfolio.github.io/Project-Library/.
 
 
 
