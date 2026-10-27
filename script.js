@@ -103,7 +103,7 @@ function navLinkActive(pageName) {
 
 let libraryOfBooks = [];
 
-function Book(id, cover, title, author, genre, pages, type, read) {
+function Book(id, cover, title, author, genre, pages, type) {
     this.id = id;
     this.cover = cover;
     this.title = title;
@@ -111,7 +111,6 @@ function Book(id, cover, title, author, genre, pages, type, read) {
     this.genre = genre;
     this.pages = pages;
     this.type = type;
-    this.read = read;
 
 }
 
@@ -187,9 +186,7 @@ function addNewBook() {
 
     });
 
-    let read = false;
-
-    const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType, read);
+    const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType);
 
     libraryOfBooks.push(newBook);
 
@@ -357,8 +354,12 @@ function createTypeIcon(type) {
 }
 
 
-Array.prototype.toggleReadStatus = function(bookId) {
-    const book = this.find(b => b.id === bookId);
+
+Book.prototype.read = false;
+
+
+Book.prototype.toggleReadStatus = function(books, bookId) {
+    const book = books.find(b => b.id === bookId);
     if (book) {
         book.read = !book.read;
         return true;
@@ -367,6 +368,7 @@ Array.prototype.toggleReadStatus = function(bookId) {
     return false;
 
 }
+
 
 
 function bookActionRead(book) {
@@ -390,7 +392,7 @@ function bookActionRead(book) {
     readBookButton.addEventListener('click', (event) => {
         const bookId = event.currentTarget.dataset.id;
 
-        const bookExists = libraryOfBooks.toggleReadStatus(bookId);
+        const bookExists = book.toggleReadStatus(libraryOfBooks, bookId);
         
         if (bookExists) {
             const updatedBook = libraryOfBooks.find(b => b.id === bookId);
@@ -433,12 +435,13 @@ function createReadingMark(button, book) {
 }
 
 
-Array.prototype.removeBook = function(bookId) {
 
-    const index = this.findIndex(book => book.id === bookId )
+Book.prototype.removeBook = function(books, bookId) {
+
+    const index = books.findIndex(book => book.id === bookId )
 
     if (index != -1) {
-        this.splice(index, 1);
+        books.splice(index, 1);
         return true;
 
     }
@@ -466,7 +469,8 @@ function bookActionRemove(book) {
         const confirmRemove = confirm("Are you sure you want to delete this book?");
 
         if (confirmRemove) {
-            const bookIsRemoved = libraryOfBooks.removeBook(bookId); /*book is removed from array*/
+            
+            const bookIsRemoved = book.removeBook(libraryOfBooks, bookId); /*book is removed from array*/
 
             if (bookIsRemoved) {
                 removeBookButton.closest(".book-card").remove(); /*traverse from the button up to the parent (book card) to remove it*/
