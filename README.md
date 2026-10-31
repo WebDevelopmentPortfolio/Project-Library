@@ -1,6 +1,6 @@
 
 
-Project: Library from The Odin Project.
+Project: Library from <a href="https://www.theodinproject.com/">The Odin Project </a>JavaScript Course.
 
 Using HTML, CSS (Flexbox for layout), and JavaScript.
 
