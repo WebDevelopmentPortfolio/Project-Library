@@ -25,7 +25,6 @@ const pageBackground = {
         sourceURL: 'https://unsplash.com/photos/brown-wooden-door-near-gray-concrete-building-during-daytime-QWWfNjXer40?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
         icon: "./images/home.png",
         text: "WELCOME TO OUR LIBRARY"
-    
     },
     browse: {
         image: 'url("./images/priscilla-du-preez-ggeZ9oyI-PE-unsplash.jpg")',
@@ -36,18 +35,14 @@ const pageBackground = {
         sourceURL: 'https://unsplash.com/photos/shallow-focus-photography-of-bookshelfs-ggeZ9oyI-PE?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText',
         icon: "./images/book-icon-155.png",
         text: "BOOKS AND E-BOOKS"
-
     }
-
 };
-
 
 const pageBackgroundImage = document.querySelector(".background-image");
 const attributionText = document.querySelector(".attribution");
 const pageIcon = document.querySelector(".page-icon");
 const pageText = document.querySelector(".text-overlay p");
 const textOverlay = document.querySelector(".text-overlay");
-
 
 function swapPageBackground(pageName) {
     const pageBackgroundData = pageBackground[pageName];
@@ -81,25 +76,17 @@ function swapPageBackground(pageName) {
     attributionText.replaceChildren(text1, authorLink, text2, sourceLink);
     pageIcon.replaceChildren(imageIcon);
     textOverlay.replaceChildren(pageIcon, pageText);
-
 }
 
-
 function navLinkActive(pageName) {
-
     navLinks.forEach(link => {
         if (link.getAttribute('data-page') === pageName) {
             link.classList.add('active');
-
-        }
-        else {
+        } else {
             link.classList.remove('active');
         }
-
     });
 }
-
-
 
 let libraryOfBooks = [];
 
@@ -111,9 +98,7 @@ function Book(id, cover, title, author, genre, pages, type) {
     this.genre = genre;
     this.pages = pages;
     this.type = type;
-
 }
-
 
 const fonts = [
     "Brush Script MT, cursive",
@@ -127,7 +112,6 @@ const fonts = [
     "Kunstler Script, cursive"
 ]
 
-
 const colors = [
     "#27D2FF",
     "#4E7B18",
@@ -135,13 +119,11 @@ const colors = [
     "#240F4E",
     "#0A2215",
     "#67571A"
-
 ]
 
 const pick = array => array[Math.floor(Math.random() * array.length)];
 
 function addNewBook() {
-    
     const id = crypto.randomUUID();
 
     const bookCover = {
@@ -167,8 +149,7 @@ function addNewBook() {
         
         enteredAuthor = nameArray.join(" ");
 
-    }
-    else {
+    } else {
         enteredAuthor = convertText(author.value.toUpperCase());
     }
 
@@ -183,7 +164,6 @@ function addNewBook() {
         if(type.checked) {
             selectedType = type.parentElement.textContent;
         }
-
     });
 
     const newBook = new Book(id, bookCover, enteredTitle, enteredAuthor, selectedGenre, enteredPages, selectedType);
@@ -193,7 +173,6 @@ function addNewBook() {
     if (currentPage === 'browse') {
         displayBooks();
     }
-
 }
 
 /*convert to title case*/
@@ -201,14 +180,11 @@ function convertText(string) {
     return string.charAt(0) + string.slice(1).toLowerCase();
 }
 
-
 addBookBtn.addEventListener('click', () => {
     modalBox.showModal();
     clearAllInputs();
     formToSubmit.reset();
-
 });
-
 
 function clearAllInputs() {
     title.value = "";
@@ -218,35 +194,24 @@ function clearAllInputs() {
     types.forEach((type) => {
         type.checked = false;
     });
-
-
 }
-
 
 pages.addEventListener('input', () => {
     if(pages.value <= 0) { /*disallow zero and negative numbers*/
         pages.value = 1;
     }
-
 });
-
 
 formToSubmit.addEventListener('submit', (event) => {
     event.preventDefault();
     addNewBook();
     alert("New book has been successfully added.");
     modalBox.close();
-    
-
 });
-
-
 
 modalBtnCancel.addEventListener('click', () => {
-    modalBox.close();
-    
+    modalBox.close();    
 });
-
 
 function createImageBook(book) {
     const imgContainer = document.createElement("div");
@@ -265,21 +230,18 @@ function createImageBook(book) {
         readingOverlay.textContent = "Reading";
 
         imgContainer.append(imgBook, readingOverlay);
-
     }
 
     return imgContainer;
-
 }
 
-
-function createBookOverlay(book) {
-    
+function createBookOverlay(book) {    
     const overlay = document.createElement("div");
     overlay.classList.add(
         "book-image-overlay", 
         book.cover.position
     );
+    
     overlay.style.fontFamily = book.cover.font;
     overlay.style.color = book.cover.color;
     overlay.style.textAlign = book.cover.alignment;
@@ -294,10 +256,7 @@ function createBookOverlay(book) {
     overlay.append(overlayTitle, overlayAuthor);
 
     return overlay;
-
-
 }
-
 
 function displayBookDetails(book) {
     const bookDetails = document.createElement("div");
@@ -327,17 +286,13 @@ function displayBookDetails(book) {
     bookDetails.append(bookTitle, bookAuthor, bookGenre, numberOfPages, typeOfBookContainer);
 
     return bookDetails;
-
 }
-
 
 const typeIcons = {
     paperback: './images/book-open-blank-variant-outline.png',
     ebook: './images/book-outline.png',
     audiobook: './images/headphone-svgrepo-com.png'
-
 }
-
 
 function createTypeIcon(type) {
     const typeIconContainer = document.createElement("div");
@@ -350,13 +305,9 @@ function createTypeIcon(type) {
     typeIconContainer.replaceChildren(imgTypeContainer);
 
     return typeIconContainer;
-
 }
 
-
-
 Book.prototype.read = false;
-
 
 Book.prototype.toggleReadStatus = function(books, bookId) {
     const book = books.find(b => b.id === bookId);
@@ -365,14 +316,11 @@ Book.prototype.toggleReadStatus = function(books, bookId) {
         return true;
 
     }
+    
     return false;
-
 }
 
-
-
-function bookActionRead(book) {
-    
+function bookActionRead(book) {    
     const readBookButton = document.createElement("button");
         
     const imgReadIcon = document.createElement("img");
@@ -403,15 +351,11 @@ function bookActionRead(book) {
             readBookButton.classList.toggle("btn-unread", !updatedBook.read);
 
             createReadingMark(readBookButton, updatedBook);
-            
         }
-
-    })
+    });
     
     return readBookButton;
-
 }
-
 
 function createReadingMark(button, book) {
     const bookCard = button.closest(".book-card"); /*traverse from the read button up to the common parent*/
@@ -425,31 +369,21 @@ function createReadingMark(button, book) {
 
         const overlayContainer = bookCard.querySelector(".book-image-container"); /*traverse down to the correct container to append*/
         overlayContainer.append(readingOverlay); 
-
-    }
-    else if (!book.read && readingOverlay) {
+    } else if (!book.read && readingOverlay) {
         readingOverlay.remove();
     }
-
-
 }
 
-
-
 Book.prototype.removeBook = function(books, bookId) {
-
     const index = books.findIndex(book => book.id === bookId )
 
     if (index != -1) {
         books.splice(index, 1);
         return true;
-
     }
 
     return false;
-
 }
-
 
 function bookActionRemove(book) {
     const removeBookButton = document.createElement("button");
@@ -479,17 +413,11 @@ function bookActionRemove(book) {
             if (libraryOfBooks.length === 0) {
                 noBooksText();
             }
-
         }
-
-
     });
 
     return removeBookButton;
-
 }
-
-
 
 function createBookActions(book) {
     const bookActionsContainer = document.createElement("div");
@@ -502,25 +430,18 @@ function createBookActions(book) {
     bookActionsContainer.append(readButton, removeButton);
 
     return bookActionsContainer;
-
-
 }
-
 
 function noBooksText() {
     const textToDisplay = document.createElement("p");
     textToDisplay.textContent = "NO BOOKS TO DISPLAY. PLEASE ADD A BOOK.";
     booksContainer.append(textToDisplay);
-
 }
 
-
-function displayBooks() {
-    
+function displayBooks() {    
     if (libraryOfBooks.length === 0) {
         noBooksText();
-    }
-    else {
+    } else {
         booksContainer.replaceChildren();
 
         libraryOfBooks.forEach(function(book) {
@@ -536,14 +457,10 @@ function displayBooks() {
             const bookActions = createBookActions(book);
 
             card.append(bookImage, overlay, bookDetails, bookActions);
-            booksContainer.appendChild(card);
-            
+            booksContainer.appendChild(card);      
         }); 
-
     }
-    
 }
-
 
 navLinks.forEach(link => {
     link.addEventListener('click', (event) => {
@@ -556,17 +473,11 @@ navLinks.forEach(link => {
         swapPageBackground(pageName);
        
         if (pageName === 'home') {
-            booksContainer.replaceChildren(); /*make the books container NOT visible*/
-        
-        }
-        else if (pageName === 'browse') {
+            booksContainer.replaceChildren(); /*make the books container NOT visible*/        
+        } else if (pageName === 'browse') {
             displayBooks();
         }
-
-
     });
-
 });
-
 
 swapPageBackground('home'); /*default page*/
